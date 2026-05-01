@@ -1,0 +1,30 @@
+services:
+  db:
+    image: mysql:8.0
+    ports:
+      - "${MYSQL_PORT}:3306" 
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+  web:
+    build: .
+    depends_on:
+      - redis
+      - db
+    ports:
+      - "${APP_PORT}:8000"
+    environment:
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+    volumes:
+      - .:/app
+  redis:
+    image: redis:alpine
+
+volumes:
+  mysql_data:

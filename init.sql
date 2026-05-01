@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS alunos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    turma VARCHAR(255)
+);
+
+CREATE TABLE IF NOT EXISTS provas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS notas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_aluno INT NOT NULL,
+    id_prova INT NOT NULL,
+    nota DECIMAL(4,2) NOT NULL,
+
+    FOREIGN KEY (id_aluno) REFERENCES alunos(id),
+    FOREIGN KEY (id_prova) REFERENCES provas(id)
+);
