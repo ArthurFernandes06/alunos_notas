@@ -1,0 +1,1 @@
+from repositores.provas import cadastrar_prova

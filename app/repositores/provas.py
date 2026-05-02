@@ -1,16 +1,33 @@
-from app.schemas import ProvasSchema
+from schemas import ProvasSchema
+from core import ConnectionDB
 
-async def listar_todas_provas() -> list[ProvasSchema]:
+def listar_todas_provas() -> list[ProvasSchema]:
+    
     pass
 
-async def buscar_prova(id: int) -> ProvasSchema:
+def buscar_prova(id: int) -> ProvasSchema:
     pass
 
-async def cadastrar_prova(prova: ProvasSchema) -> bool:
+def cadastrar_prova(prova: ProvasSchema) -> bool:
+    queryStr = """
+        INSERT INTO provas (nome) VALUES (%s);
+    """
+    sucess_operation = True
+    with ConnectionDB() as cursor:
+        values = (prova.nome,)
+
+        try:
+            cursor.execute(queryStr, values)
+
+        except Exception as ex:
+            print(ex)
+            sucess_operation = False
+
+    return sucess_operation 
+
+
+def atualizar_prova(prova: ProvasSchema) -> bool:
     pass
 
-async def atualizar_prova(prova: ProvasSchema) -> bool:
-    pass
-
-async def deletar_prova(id: int) -> bool:
+def deletar_prova(id: int) -> bool:
     pass

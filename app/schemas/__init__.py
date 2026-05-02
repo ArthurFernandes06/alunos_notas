@@ -1,3 +1,3 @@
-from app.schemas.provas import ProvasSchema
-from app.schemas.alunos import AlunosSchema
-from app.schemas.notas import NotasSchema
+from schemas.provas import ProvasSchema
+from schemas.alunos import AlunosSchema
+from schemas.notas import NotasSchema
