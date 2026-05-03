@@ -1,1 +1,0 @@
-from repositores.provas import cadastrar_prova, listar_todas_provas, buscar_prova, atualizar_prova, deletar_prova
