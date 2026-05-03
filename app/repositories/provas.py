@@ -1,5 +1,5 @@
-from schemas import ProvasSchema
-from core import ConnectionDB
+from app.schemas import ProvasSchema
+from app.core import ConnectionDB
 
 def listar_todas_provas() -> list[ProvasSchema]:
     #Retorna uma lista com objetos ProvasSchemas

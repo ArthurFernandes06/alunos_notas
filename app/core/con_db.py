@@ -1,5 +1,9 @@
 import pymysql
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 class ConnectionDB:
     def __enter__(self):
         self.connection = pymysql.connect(

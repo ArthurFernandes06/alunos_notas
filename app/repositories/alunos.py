@@ -1,5 +1,5 @@
-from schemas import AlunosSchema
-from core import ConnectionDB
+from app.schemas import AlunosSchema
+from app.core import ConnectionDB
 
 def listar_todos_alunos() -> list[AlunosSchema]:
     #Retorna uma lista de com objetos AlunosSchema.

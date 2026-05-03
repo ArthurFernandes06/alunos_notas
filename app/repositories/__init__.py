@@ -1,2 +1,2 @@
-from repositories.provas import cadastrar_prova, listar_todas_provas, buscar_prova, atualizar_prova, deletar_prova
-from repositories.alunos import cadastrar_aluno, listar_todos_alunos, buscar_aluno, atualizar_aluno, deletar_aluno
+from app.repositories.provas import cadastrar_prova, listar_todas_provas, buscar_prova, atualizar_prova, deletar_prova
+from app.repositories.alunos import cadastrar_aluno, listar_todos_alunos, buscar_aluno, atualizar_aluno, deletar_aluno

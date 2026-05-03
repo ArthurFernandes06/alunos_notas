@@ -1,1 +1,1 @@
-from core.con_db import ConnectionDB
+from app.core.con_db import ConnectionDB
