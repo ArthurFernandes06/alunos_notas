@@ -22,7 +22,7 @@ def create_prova(prova: ProvasSchema):
     nova_prova = cadastrar_prova(prova)
     return {"id": nova_prova.id, "nome": nova_prova.nome}
 
-@router.put("/provas/{id}",status_code=200)
+@router.put("/provas/{id}",status_code=201)
 def update_prova(id: int, prova: ProvasSchema):
     prova.id = id
     try:

@@ -39,8 +39,9 @@ def cadastrar_prova(prova: ProvasSchema) -> ProvasSchema:
         INSERT INTO provas (nome) VALUES (%s);
     """
     
+    values = (prova.nome,)
     with ConnectionDB() as cursor:
-        values = (prova.nome,)
+        
         cursor.execute(queryStr, values)
         prova.id = cursor.lastrowid
 
