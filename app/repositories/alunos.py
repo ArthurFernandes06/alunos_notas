@@ -28,6 +28,7 @@ def buscar_aluno(id: int) -> AlunosSchema | None:
         SELECT id, matricula, nome, turma FROM alunos
         WHERE id = %s;
     """
+    aluno = None
     with ConnectionDB() as cursor:
         cursor.execute(queryStr, (id,))
         result = cursor.fetchone()
@@ -39,8 +40,7 @@ def buscar_aluno(id: int) -> AlunosSchema | None:
                 nome = result[2],
                 turma = result[3]
             )
-        else:
-            aluno = None
+            
 
     return aluno
 
@@ -49,6 +49,7 @@ def buscar_aluno_matricula(matricula: str) -> AlunosSchema | None:
         SELECT id, matricula, nome, turma FROM alunos
         WHERE matricula = %s;
     """
+    aluno = None
     with ConnectionDB() as cursor:
         cursor.execute(queryStr, (matricula,))
         result = cursor.fetchone()
@@ -60,8 +61,6 @@ def buscar_aluno_matricula(matricula: str) -> AlunosSchema | None:
                 nome = result[2],
                 turma = result[3]
             )
-        else:
-            aluno = None
 
     return aluno
 
@@ -93,6 +92,7 @@ def atualizar_aluno(aluno: AlunosSchema) -> None:
     values = (aluno.nome, aluno.matricula, aluno.turma, aluno.id,)
     if aluno.id is None:
         raise ValueError("Requisição sem id.")
+    
     try:
         with ConnectionDB() as cursor:
             cursor.execute(queryStr, values)

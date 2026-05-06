@@ -1,8 +1,9 @@
 CREATE TABLE IF NOT EXISTS alunos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     matricula VARCHAR(50) UNIQUE NOT NULL,
-    nome VARCHAR(255) NOT NULL,
-    turma VARCHAR(50) NOT NULL
+    nome VARCHAR(255)  NOT NULL,
+    turma VARCHAR(50)  NOT NULL
+
 );
 
 CREATE TABLE IF NOT EXISTS provas (
@@ -12,10 +13,11 @@ CREATE TABLE IF NOT EXISTS provas (
 
 CREATE TABLE IF NOT EXISTS notas (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    id_aluno INT NOT NULL,
-    id_prova INT NOT NULL,
+    id_aluno INT  NOT NULL,
+    id_prova INT  NOT NULL,
     nota DECIMAL(4,2) NOT NULL,
 
+    UNIQUE(id_aluno, id_prova);
     FOREIGN KEY (id_aluno) REFERENCES alunos(id),
     FOREIGN KEY (id_prova) REFERENCES provas(id)
 );

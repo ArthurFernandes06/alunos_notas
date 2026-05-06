@@ -57,7 +57,7 @@ def atualizar_prova(prova: ProvasSchema) -> None:
     """
     values = (prova.nome, prova.id,)
     #Valida se os atributos id é != None
-    if prova.id != None:
+    if prova.id is not None:
         with ConnectionDB() as cursor:      
             cursor.execute(queryStr, values)
             if cursor.rowcount == 0:
