@@ -19,7 +19,7 @@ def listar_todas_provas() -> list[ProvasSchema]:
     return todas_provas
 
 
-def buscar_prova(id: int) -> ProvasSchema | None:
+def buscar_prova(id_prova: int) -> ProvasSchema | None:
     #Se a buscar dor bem sucedida retorna um ProvaSchema,
     #caso contrário retorna None
     queryStr = """
@@ -27,7 +27,7 @@ def buscar_prova(id: int) -> ProvasSchema | None:
     """
     prova = None
     with ConnectionDB() as cursor:   
-        cursor.execute(queryStr,(id,))
+        cursor.execute(queryStr,(id_prova,))
         result = cursor.fetchone()
         if result:
             prova = ProvasSchema(id=result[0], nome=result[1])
@@ -55,24 +55,24 @@ def atualizar_prova(prova: ProvasSchema) -> None:
         SET nome = %s 
         WHERE id = %s;
     """
-    values = (prova.nome, prova.id,)
-    #Valida se os atributos id é != None
-    if prova.id is not None:
-        with ConnectionDB() as cursor:      
-            cursor.execute(queryStr, values)
-            if cursor.rowcount == 0:
-                raise ValueError("Prova não encontrada.")
-    else:
+    if prova.id is None:
         raise ValueError("Requisição sem id.")
-
+    
+    values = (prova.nome, prova.id,)
+    with ConnectionDB() as cursor: 
+        #Verifica se há um registro com esse id
+        cursor.execute("SELECT * FROM provas WHERE id = %s", (prova.id,))
+        if cursor.fetchone() is None:
+            raise ValueError("Prova não encontrada.")
         
-
-def deletar_prova(id: int) -> None:
+        cursor.execute(queryStr, values)
+        
+def deletar_prova(id_prova: int) -> None:
     queryStr = """
         DELETE FROM provas WHERE id = %s;
     """
 
     with ConnectionDB() as cursor:  
-        cursor.execute(queryStr, (id,))
+        cursor.execute(queryStr, (id_prova,))
         if cursor.rowcount == 0:
             raise ValueError("Prova não encontrada.")

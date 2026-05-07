@@ -20,14 +20,14 @@ def listar_todas_notas() -> list[NotasSchema]:
     return lista_notas
 
 
-def buscar_nota(id: int) -> NotasSchema | None:
+def buscar_nota(id_nota: int) -> NotasSchema | None:
     queryStr = """
         SELECT id, id_aluno, id_prova, nota FROM notas 
         WHERE id = %s;
     """
     nota = None
     with ConnectionDB() as cursor:
-        cursor.execute(queryStr, (id, ))
+        cursor.execute(queryStr, (id_nota, ))
         result = cursor.fetchone()
         if result:
             nota = NotasSchema(
@@ -94,7 +94,7 @@ def buscar_nota_prova_aluno(id_aluno: int, id_prova: int) -> NotasSchema | None:
                 id_prova= result[2],
                 nota= result[3]
             )
-            
+
     return nota
 
 def cadastrar_nota(nota: NotasSchema) -> NotasSchema:
@@ -110,9 +110,9 @@ def cadastrar_nota(nota: NotasSchema) -> NotasSchema:
     except Exception as ex:
         if hasattr(ex, "args"):
             if ex.args[0] == 1062:
-                raise ValueError("Essa nota já está cadastrada.")
+                raise ValueError("Essa nota já está cadastrada")
             elif ex.args[0] == 1452:
-                raise ValueError("Aluno ou prova não existe.")
+                raise ValueError("Aluno ou prova não existe")
             
         raise
         
@@ -124,29 +124,35 @@ def atualizar_nota(nota: NotasSchema) -> None:
         SET id_aluno = %s, id_prova = %s, nota = %s
         where id = %s;
     """
-    values = (nota.id_aluno, nota.id_prova, nota.nota, nota.id, )
-
     if nota.id is None:
-        raise ValueError("Requisição sem id.")
+        raise ValueError("Requisição sem id")
+    
+    values = (nota.id_aluno, nota.id_prova, nota.nota, nota.id, )
     try:
         with ConnectionDB() as cursor:
+            #Verifica se o registro já existe
+            cursor.execute("SELECT * FROM notas WHERE id = %s",(nota.id,))
+            if cursor.fetchone() is None:
+                raise ValueError("Nota não encontrada")
+            
             cursor.execute(queryStr, values)
-            if cursor.rowcount == 0:
-                raise ValueError("Nota não encontrada.")
+
     except Exception as ex:
         if hasattr(ex, "args"):
             if ex.args[0] == 1062:
-                raise ValueError("Esse aluno já possui nota para essa prova.")
+                #Já existe um par nota e prova com outro id.
+                raise ValueError("Esse aluno já possui nota para essa prova")
             elif ex.args[0] == 1452:
-                raise ValueError("Aluno ou prova não existe.")
+                #Alguma das chaves estrangeiras não existe
+                raise ValueError("Aluno ou prova não existe")
         raise
         
-def deletar_nota(id: int) -> None:
+def deletar_nota(id_nota: int) -> None:
     queryStr = """
         DELETE FROM notas WHERE id = %s;
     """
 
     with ConnectionDB() as cursor:  
-        cursor.execute(queryStr, (id,))
+        cursor.execute(queryStr, (id_nota,))
         if cursor.rowcount == 0:
-            raise ValueError("Nota não encontrada.")
+            raise ValueError("Nota não encontrada")

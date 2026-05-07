@@ -33,7 +33,7 @@ def create_aluno(aluno: AlunosSchema):
     
     return novo_aluno
 
-@router.put("/alunos/{aluno_id}",status_code=201)
+@router.put("/alunos/{aluno_id}",status_code=200)
 def update_aluno(aluno: AlunosSchema, aluno_id: int):
     aluno.id = aluno_id
     
@@ -48,8 +48,8 @@ def update_aluno(aluno: AlunosSchema, aluno_id: int):
     return aluno
 
 @router.delete("/alunos/{aluno_id}",status_code=204)
-def delete_aluno(aluno_id):
+def delete_aluno(aluno_id: int):
     try:
-        deletar_aluno(id)
+        deletar_aluno(aluno_id)
     except ValueError as v:
         raise HTTPException(status_code=404, detail=str(v))

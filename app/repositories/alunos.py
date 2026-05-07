@@ -23,14 +23,14 @@ def listar_todos_alunos() -> list[AlunosSchema]:
 
     return lista_alunos
 
-def buscar_aluno(id: int) -> AlunosSchema | None:
+def buscar_aluno(id_aluno: int) -> AlunosSchema | None:
     queryStr = """
         SELECT id, matricula, nome, turma FROM alunos
         WHERE id = %s;
     """
     aluno = None
     with ConnectionDB() as cursor:
-        cursor.execute(queryStr, (id,))
+        cursor.execute(queryStr, (id_aluno,))
         result = cursor.fetchone()
 
         if result:
@@ -76,7 +76,7 @@ def cadastrar_aluno(aluno: AlunosSchema) -> AlunosSchema:
             aluno.id = cursor.lastrowid
     except Exception as ex:
         if hasattr(ex, "args") and ex.args[0] == 1062:
-            raise ValueError("Essa matricula já existe.")
+            raise ValueError("Essa matricula já existe")
         else:
             raise
 
@@ -89,26 +89,31 @@ def atualizar_aluno(aluno: AlunosSchema) -> None:
         SET nome = %s, matricula = %s, turma = %s 
         WHERE id = %s;
     """
-    values = (aluno.nome, aluno.matricula, aluno.turma, aluno.id,)
     if aluno.id is None:
-        raise ValueError("Requisição sem id.")
+        raise ValueError("Requisição sem id")
+    
+    values = (aluno.nome, aluno.matricula, aluno.turma, aluno.id,)
     
     try:
         with ConnectionDB() as cursor:
+            #Verifica se o registro existe no banco
+            cursor.execute("SELECT * FROM alunos WHERE id = %s;",(aluno.id, ))
+            if cursor.fetchone is None:
+                raise ValueError("Aluno não encontrado")
+            
             cursor.execute(queryStr, values)
-            if cursor.rowcount == 0:
-                raise ValueError("Aluno não encontrado.")
+
     except Exception as ex:
         if hasattr(ex, "args") and ex.args[0] == 1062:
             raise ValueError("Matricula já cadastrada")
         else:
             raise
 
-def deletar_aluno(id: int) -> None:
+def deletar_aluno(id_aluno: int) -> None:
     queryStr = """
         DELETE FROM alunos WHERE id = %s;
     """
     with ConnectionDB() as cursor:
-        cursor.execute(queryStr,(id,))
+        cursor.execute(queryStr,(id_aluno,))
         if cursor.rowcount == 0:
-            raise ValueError("Aluno não encontrado.")
+            raise ValueError("Aluno não encontrado")
