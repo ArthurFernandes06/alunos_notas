@@ -77,6 +77,26 @@ def buscar_notas_prova(id_prova: int) -> list[NotasSchema]:
             lista_notas.append(nota)
     return lista_notas
 
+def buscar_nota_prova_aluno(id_aluno: int, id_prova: int) -> NotasSchema | None:
+    queryStr = """
+        SELECT id, id_aluno, id_prova, nota FROM notas 
+        WHERE id_aluno = %s AND id_prova = %s;
+    """
+    nota = None
+    values = (id_aluno, id_prova, ) 
+    with ConnectionDB() as cursor:
+        cursor.execute(queryStr, values)
+        result = cursor.fetchone()
+        if result:
+            nota = NotasSchema(
+                id= result[0],
+                id_aluno= result[1],
+                id_prova= result[2],
+                nota= result[3]
+            )
+            
+    return nota
+
 def cadastrar_nota(nota: NotasSchema) -> NotasSchema:
     queryStr = """
         INSERT INTO notas (id_aluno, id_prova, nota) 

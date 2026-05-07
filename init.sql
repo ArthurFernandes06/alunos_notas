@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS notas (
     id_prova INT  NOT NULL,
     nota DECIMAL(4,2) NOT NULL,
 
-    UNIQUE(id_aluno, id_prova);
-    FOREIGN KEY (id_aluno) REFERENCES alunos(id),
-    FOREIGN KEY (id_prova) REFERENCES provas(id)
+    UNIQUE(id_aluno, id_prova),
+    FOREIGN KEY (id_aluno) REFERENCES alunos(id) ON DELETE CASCADE,
+    FOREIGN KEY (id_prova) REFERENCES provas(id) ON DELETE CASCADE
 );

@@ -1,3 +1,3 @@
 from app.repositories.provas import cadastrar_prova, listar_todas_provas, buscar_prova, atualizar_prova, deletar_prova
 from app.repositories.alunos import cadastrar_aluno, listar_todos_alunos, buscar_aluno,buscar_aluno_matricula, atualizar_aluno, deletar_aluno
-from app.repositories.notas import cadastrar_nota, listar_todas_notas, buscar_nota, buscar_notas_aluno, buscar_notas_prova, atualizar_nota, deletar_nota
+from app.repositories.notas import cadastrar_nota, listar_todas_notas, buscar_nota,buscar_nota_prova_aluno, buscar_notas_aluno, buscar_notas_prova, atualizar_nota, deletar_nota
