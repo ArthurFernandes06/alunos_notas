@@ -4,18 +4,18 @@ from fastapi import APIRouter, HTTPException, Query
 
 router = APIRouter()
 
-@router.get("/alunos",status_code=200)
+@router.get("/alunos",status_code=200, response_model=list[AlunosSchema])
 def get_alunos(matricula:str | None = Query(default=None)):
-    if matricula:
+    if matricula is not None:
         aluno = buscar_aluno_matricula(matricula)
         if aluno is None:
             raise HTTPException(status_code=404, detail="Aluno não encontrado")
-        return [aluno] if aluno else []
+        return [aluno] 
 
     return listar_todos_alunos()
 
 
-@router.get("/alunos/{aluno_id}", status_code=200)
+@router.get("/alunos/{aluno_id}", status_code=200, response_model= AlunosSchema)
 def get_aluno(aluno_id: int):
     aluno = buscar_aluno(aluno_id)
 
@@ -24,7 +24,7 @@ def get_aluno(aluno_id: int):
     
     return aluno
 
-@router.post("/alunos", status_code=201)
+@router.post("/alunos", status_code=201,response_model= AlunosSchema)
 def create_aluno(aluno: AlunosSchema):
     try:
         novo_aluno = cadastrar_aluno(aluno)
@@ -33,7 +33,7 @@ def create_aluno(aluno: AlunosSchema):
     
     return novo_aluno
 
-@router.put("/alunos/{aluno_id}",status_code=200)
+@router.put("/alunos/{aluno_id}",status_code=200, response_model=AlunosSchema)
 def update_aluno(aluno: AlunosSchema, aluno_id: int):
     aluno.id = aluno_id
     
@@ -53,3 +53,4 @@ def delete_aluno(aluno_id: int):
         deletar_aluno(aluno_id)
     except ValueError as v:
         raise HTTPException(status_code=404, detail=str(v))
+    return

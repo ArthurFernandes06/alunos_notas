@@ -5,38 +5,38 @@ from fastapi import APIRouter, HTTPException, Query
 
 router = APIRouter()
 
-@router.get("/notas", status_code=200)
+@router.get("/notas", status_code=200,response_model=list[NotasSchema])
 def get_notas(id_aluno: int | None = Query(default=None), id_prova: int | None = Query(default=None)):
-    if id_aluno and id_prova:
+    if id_aluno is not None and id_prova is not None:
         nota = buscar_nota_prova_aluno(id_aluno=id_aluno, id_prova=id_prova)
         if nota is None:
             return []
         
         return [nota]
     
-    elif id_aluno:
+    elif id_aluno is not None:
         return buscar_notas_aluno(id_aluno)
     
-    elif id_prova:
+    elif id_prova is not None:
         return buscar_notas_prova(id_prova)
     
     return listar_todas_notas()
 
-@router.get("/notas/{id_nota}")
+@router.get("/notas/{id_nota}",status_code=200, response_model=NotasSchema)
 def get_nota(id_nota: int):
     nota = buscar_nota(id_nota)
     if nota is None:
         raise HTTPException(status_code=404, detail="Nota não encontrada")
     return nota
 
-@router.post("/notas", status_code=201)
+@router.post("/notas", status_code=201, response_model=NotasSchema)
 def create_nota(nota: NotasSchema):
     try:
         return cadastrar_nota(nota)
     except ValueError as v:
         raise HTTPException(status_code=409, detail=str(v))
     
-@router.put("/notas/{id_nota}",status_code=200)
+@router.put("/notas/{id_nota}",status_code=200, response_model=NotasSchema)
 def update_nota(nota: NotasSchema, id_nota: int):
     nota.id = id_nota
     try:
@@ -59,3 +59,4 @@ def delete_nota(id_nota: int):
         deletar_nota(id_nota)
     except ValueError as v:
         raise HTTPException(status_code=404, detail=str(v))
+    

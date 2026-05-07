@@ -17,9 +17,6 @@ services:
       - db
     ports:
       - "${APP_PORT}:8000"
-    environment:
-      - REDIS_HOST=${REDIS_HOST}
-      - REDIS_PORT=${REDIS_PORT}
     volumes:
       - .:/app
 
